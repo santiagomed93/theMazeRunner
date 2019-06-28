@@ -5,7 +5,7 @@ import java.util.List;
 import com.bootcamp.santiagomed93.hotelApi.model.City;
 import com.bootcamp.santiagomed93.hotelApi.model.Country;
 import com.bootcamp.santiagomed93.hotelApi.model.Hotel;
-import com.bootcamp.santiagomed93.hotelApi.model.request.HotelRequest;
+import com.bootcamp.santiagomed93.hotelApi.model.Room;
 
 public interface DataSource {
 
@@ -23,7 +23,19 @@ public interface DataSource {
 	List<City> findCityByPopulationTo(Long populationTo);
 	List<City> findCityByPopulationBetween(Long populationFrom, Long populationTo);
 	void saveCity(City city);
+	void deleteCityById(Long id);
 	
 	List<Hotel> findAllHotel();
-	void saveHotel(HotelRequest hotelrequest);
+	Hotel findHotelById(Long id);
+	Hotel findHotelByName(String name);
+	List<Hotel> findHotelByNameLike(String name);
+	void saveHotel(Hotel hotel);
+	void deleteHotelById(Long id);
+	
+	List<Room> findAllRoom();
+	Room findRoomById(Long id);
+	List<Room> findRoomByFilter(Integer costFrom, Integer costTo, Integer capacity);
+	void saveRoom(Room room);
+	void deleteRoomById(Long id);
+	
 }

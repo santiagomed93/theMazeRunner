@@ -19,17 +19,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bootcamp.santiagomed93.hotelApi.service.DataSource;
-import com.bootcamp.santiagomed93.hotelApi.model.City;
 import com.bootcamp.santiagomed93.hotelApi.model.Hotel;
+import com.bootcamp.santiagomed93.hotelApi.model.Room;
+import com.bootcamp.santiagomed93.hotelApi.service.DataSource;
 
 @RestController
-@RequestMapping("/hotels")
-public class HotelController {
-	
+@RequestMapping("/rooms")
+public class RoomController {
+
 	@Autowired
 	private DataSource datasource;
-	
 	
 	@RequestMapping(method = RequestMethod.OPTIONS)
 	public ResponseEntity<?> collectionOptions1(){
@@ -40,17 +39,18 @@ public class HotelController {
 	}
 	
 	@GetMapping()
-	public ResponseEntity<List<Hotel>> listHotel(){
-		return  new ResponseEntity<>(datasource.findAllHotel(), HttpStatus.OK);
+	public ResponseEntity<List<Room>> listRoom(){
+		return  new ResponseEntity<>(datasource.findAllRoom(), HttpStatus.OK);
 	}
 	
 	@PostMapping()
-	public ResponseEntity<Hotel> createHotel(@RequestBody @Valid Hotel hotel){
-		if(hotel.getCity() != null) {
-			City city = datasource.findCityById(hotel.getCity().getId());
-			if(city!= null) {
-				datasource.saveHotel(hotel);
-				return new ResponseEntity<>(hotel, HttpStatus.CREATED);
+	public ResponseEntity<Room> createRoom(@RequestBody @Valid Room room){
+		if(room.getHotel() != null) {
+			Hotel hotel = datasource.findHotelById(room.getHotel().getId());
+			if(hotel != null) {
+				room.setCapacity(room.getSingleBed() + room.getDoubleBed());
+				datasource.saveRoom(room);
+				return new ResponseEntity<>(room, HttpStatus.CREATED);
 			}
 		}
 		return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
@@ -65,36 +65,36 @@ public class HotelController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Hotel> getHotelById(@PathVariable("id") Long id){
-		Hotel hotel = datasource.findHotelById(id);
-		if(hotel != null) {
-			return new ResponseEntity<>(hotel, HttpStatus.OK);
+	public ResponseEntity<Room> getRoomById(@PathVariable("id") Long id){
+		Room room = datasource.findRoomById(id);
+		if(room != null) {
+			return new ResponseEntity<>(room, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateHotel(@PathVariable("id") Long id, @RequestBody @Valid Hotel hotel){
-		Hotel hotelData = datasource.findHotelById(id);
-		if(hotelData != null) {
-			hotel.setId(hotelData.getId());	
-			if(hotel.getCity().getId() != null) {
-				City cityData = datasource.findCityById(hotel.getCity().getId());
-				if(cityData == null) {
+	public ResponseEntity<?> updateRoom(@PathVariable("id") Long id, @RequestBody @Valid Room room){
+		Room roomData = datasource.findRoomById(id);
+		if(roomData != null) {
+			room.setId(roomData.getId());
+			if(room.getHotel().getId()!= null) {
+				Hotel hotel = datasource.findHotelById(room.getHotel().getId());
+				if(hotel == null) {
 					return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 				}
-				hotel.setCity(cityData);
+				room.setHotel(hotel);
 			}
-			
-			datasource.saveHotel(hotel);
+			datasource.saveRoom(room);
 			return new ResponseEntity<>(null,HttpStatus.OK);
 		}
+		
 		return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);		
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteHotel(@PathVariable("id") Long id) {
-		datasource.deleteHotelById(id);
+	public void deleteRoom(@PathVariable("id") Long id) {
+		datasource.deleteRoomById(id);
 	}
 	
 	@RequestMapping(value="/filter", method = RequestMethod.OPTIONS)
@@ -106,10 +106,14 @@ public class HotelController {
 	}
 	
 	@GetMapping("/filter")
-	public ResponseEntity<List<Hotel>> getHotelByName(@RequestParam("name") String name){
-		List<Hotel> hotels = datasource.findHotelByNameLike(name);
-		if(!hotels.isEmpty()) {
-			return new ResponseEntity<>(hotels, HttpStatus.OK);
+	public ResponseEntity<List<Room>> getRoomByFilter(@RequestParam(value = "costFrom", required = false) Integer costFrom, @RequestParam(value = "costTo", required = false) Integer costTo, @RequestParam(value = "capacity", required = false) Integer capacity){
+		if(costFrom == null && costTo == null && capacity == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		
+		List<Room> list = datasource.findRoomByFilter(costFrom, costTo, capacity);
+		if(!list.isEmpty()) {
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 	}

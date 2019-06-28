@@ -1,13 +1,13 @@
-package com.bootcamp.santiagomed93.flightApi;
+package com.bootcamp.santiagomed93.vagoApi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FlightApiApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FlightApiApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.bootcamp.santiagomed93.hotelApi.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,10 +14,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name="CITY")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class City {
 	
 	@Id
@@ -33,7 +36,7 @@ public class City {
 	
 	@OneToMany(mappedBy = "city",fetch = FetchType.EAGER)
 	@JsonManagedReference
-	private List<Hotel> hoteles;
+	private Set<Hotel> hotels;
 	
 	@ManyToOne
 	@JoinColumn(name="idCountry")
@@ -72,12 +75,12 @@ public class City {
 		this.population = population;
 	}
 
-	public List<Hotel> getHoteles() {
-		return hoteles;
+	public Set<Hotel> getHotels() {
+		return hotels;
 	}
 
-	public void setHoteles(List<Hotel> hoteles) {
-		this.hoteles = hoteles;
+	public void setHotels(Set<Hotel> hotels) {
+		this.hotels = hotels;
 	}
 
 	public Country getCountry() {
@@ -87,12 +90,5 @@ public class City {
 	public void setCountry(Country country) {
 		this.country = country;
 	}
-
-	@Override
-	public String toString() {
-		return "City [id=" + id + ", name=" + name + ", population=" + population + ", hoteles=" + hoteles
-				+ ", country=" + country + "]";
-	}
-
 	
 }

@@ -1,5 +1,8 @@
 package com.bootcamp.santiagomed93.hotelApi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -9,9 +12,11 @@ import org.springframework.stereotype.Service;
 import com.bootcamp.santiagomed93.hotelApi.model.City;
 import com.bootcamp.santiagomed93.hotelApi.model.Country;
 import com.bootcamp.santiagomed93.hotelApi.model.Hotel;
+import com.bootcamp.santiagomed93.hotelApi.model.Room;
 import com.bootcamp.santiagomed93.hotelApi.repository.CityRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.CountryRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.HotelRepository;
+import com.bootcamp.santiagomed93.hotelApi.repository.RoomRepository;
 
 @Service
 public class HotelApiInitializingBean implements InitializingBean{
@@ -24,6 +29,9 @@ public class HotelApiInitializingBean implements InitializingBean{
 	
 	@Autowired
 	HotelRepository hotelRepo;
+	
+	@Autowired
+	RoomRepository roomRepo;
 	
 	
 	
@@ -115,6 +123,7 @@ public class HotelApiInitializingBean implements InitializingBean{
 		////////////////
 		//Set Hotels
 		////////////////
+		
 		//----------------- Hotels Bogota --------------------------------//
 		Hotel hotel1 = new Hotel();
 		hotel1.setName("Selina");
@@ -150,7 +159,7 @@ public class HotelApiInitializingBean implements InitializingBean{
 		hotel5.setAddress("Cra. 45 #49-35, Medellín, Antioquia");
 		hotel5.setDescription("Ubicación Excelente en general para turismo, diversión y medios de transporte");
 		hotel5.setCity(cityRepo.findById(city2.getId()).get());
-		hotelRepo.saveAndFlush(hotel2);
+		hotelRepo.saveAndFlush(hotel5);
 		
 		Hotel hotel6 = new Hotel();
 		hotel6.setName("Selina");
@@ -181,9 +190,121 @@ public class HotelApiInitializingBean implements InitializingBean{
 		hotel9.setCity(cityRepo.findById(city3.getId()).get());
 		hotelRepo.saveAndFlush(hotel9);
 		
+		
+		List<Hotel> hotels = hotelRepo.findAll();
+		
+		
+		
 		////////////////
 		//Set Rooms
 		////////////////
+		
+		Room room101 = new Room();
+		room101.setNumberRoom("101");
+		room101.setSingleBed(2);
+		room101.setDoubleBed(0);
+		room101.setCost(100);
+		room101.setCapacity(2);
+		
+		Room room102 = new Room();
+		room102.setNumberRoom("102");
+		room102.setSingleBed(1);
+		room102.setDoubleBed(1);
+		room102.setCost(150);
+		room102.setCapacity(3);
+		
+		Room room103 = new Room();
+		room103.setNumberRoom("103");
+		room103.setSingleBed(1);
+		room103.setDoubleBed(1);
+		room103.setCost(150);
+		room103.setCapacity(3);
+		
+		Room room104 = new Room();
+		room104.setNumberRoom("104");
+		room104.setSingleBed(2);
+		room104.setDoubleBed(0);
+		room104.setCost(100);
+		room104.setCapacity(2);
+		
+		Room room201 = new Room();
+		room201.setNumberRoom("201");
+		room201.setSingleBed(1);
+		room201.setDoubleBed(1);
+		room201.setCost(150);
+		room201.setCapacity(3);
+		
+		Room room202 = new Room();
+		room202.setNumberRoom("202");
+		room202.setSingleBed(2);
+		room202.setDoubleBed(0);
+		room202.setCost(100);
+		room202.setCapacity(2);
+		
+		Room room203 = new Room();
+		room203.setNumberRoom("203");
+		room203.setSingleBed(2);
+		room203.setDoubleBed(0);
+		room203.setCost(100);
+		room203.setCapacity(2);
+		
+		Room room204 = new Room();
+		room204.setNumberRoom("204");
+		room204.setSingleBed(1);
+		room204.setDoubleBed(1);
+		room204.setCost(150);
+		room204.setCapacity(3);
+		
+		Room room301 = new Room();
+		room301.setNumberRoom("301");
+		room301.setSingleBed(0);
+		room301.setDoubleBed(2);
+		room301.setCost(200);
+		room301.setCapacity(4);
+		
+		Room room302 = new Room();
+		room302.setNumberRoom("302");
+		room302.setSingleBed(0);
+		room302.setDoubleBed(2);
+		room302.setCost(200);
+		room302.setCapacity(4);
+		
+		Room room303 = new Room();
+		room303.setNumberRoom("303");
+		room303.setSingleBed(0);
+		room303.setDoubleBed(2);
+		room303.setCost(200);
+		room303.setCapacity(4);
+		
+		Room room304 = new Room();
+		room304.setNumberRoom("304");
+		room304.setSingleBed(0);
+		room304.setDoubleBed(2);
+		room304.setCost(200);
+		room304.setCapacity(4);
+		
+		List<Room> rooms = new ArrayList<>();
+		rooms.add(room101);
+		rooms.add(room102);
+		rooms.add(room103);
+		rooms.add(room104);
+		rooms.add(room201);
+		rooms.add(room202);
+		rooms.add(room203);
+		rooms.add(room204);
+		rooms.add(room301);
+		rooms.add(room302);
+		rooms.add(room303);
+		rooms.add(room304);
+		
+		System.out.println(hotels.size());
+		for(Hotel hotel : hotels) {
+			for (Room room : rooms) {
+				room.setHotel(hotel);
+				roomRepo.saveAndFlush(room);
+				room.setId(null);
+			}
+		}
 		
 		
 	}

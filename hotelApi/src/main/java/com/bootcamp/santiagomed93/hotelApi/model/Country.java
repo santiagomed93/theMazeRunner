@@ -1,7 +1,6 @@
 package com.bootcamp.santiagomed93.hotelApi.model;
 
-import java.util.List;
-
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,7 +35,7 @@ public class Country {
 	
 	@OneToMany(mappedBy = "country",fetch = FetchType.EAGER)
 	@JsonManagedReference
-	private List<City> cities;
+	private Set<City> cities;
 	
 	public Country() {}
 	
@@ -61,17 +60,12 @@ public class Country {
 		this.name = name;
 	}
 
-	public List<City> getCities() {
+	public Set<City> getCities() {
 		return cities;
 	}
 
-	public void setCities(List<City> cities) {
+	public void setCities(Set<City> cities) {
 		this.cities = cities;
-	}
-
-	@Override
-	public String toString() {
-		return "Country [id=" + id + ", name=" + name + ", cities=" + cities + "]";
 	}
 
 }
