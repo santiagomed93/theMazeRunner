@@ -31,7 +31,7 @@ public class ThreeVagoApiController {
 		  new ParameterizedTypeReference<List<Country>>(){});
 		System.out.println(response.getBody());
 		List<Country> countries = response.getBody();
-		return new ResponseEntity<>(countries, HttpStatus.OK);
+		return new ResponseEntity<>(countries, response.getStatusCode());
 	}
 	
 	@GetMapping("/countries/{id}/cities")
@@ -43,31 +43,43 @@ public class ThreeVagoApiController {
 		  null,
 		  new ParameterizedTypeReference<List<City>>(){});
 		List<City> cities = response.getBody();
-		return new ResponseEntity<>(cities, HttpStatus.OK);
+		return new ResponseEntity<>(cities, response.getStatusCode());
 	}
 	
 	@GetMapping("/countries/{idCountry}/cities/{idCity}/hotels")
 	public ResponseEntity<List<Hotel>> getListHotelsByCountry(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity){
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Hotel>> response = restTemplate.exchange(
-		  urlBase+"/countries/"+idCountry+"/cities"+idCity+"/hotels",
+		  urlBase+"/countries/"+idCountry+"/cities/"+idCity+"/hotels",
 		  HttpMethod.GET,
 		  null,
 		  new ParameterizedTypeReference<List<Hotel>>(){});
 		List<Hotel> hotels = response.getBody();
-		return new ResponseEntity<>(hotels, HttpStatus.OK);
+		return new ResponseEntity<>(hotels, response.getStatusCode());
 	}
 	
 	@GetMapping("/countries/{idCountry}/cities/{idCity}/hotels/{idHotel}/rooms")
 	public ResponseEntity<List<Room>> getListRoomsByHotels(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel){
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Room>> response = restTemplate.exchange(
-		  urlBase+"/countries/"+idCountry+"/cities"+idCity+"/hotels",
+		  urlBase+"/countries/"+idCountry+"/cities/"+idCity+"/hotels/"+idHotel+"/rooms",
 		  HttpMethod.GET,
 		  null,
 		  new ParameterizedTypeReference<List<Room>>(){});
 		List<Room> rooms = response.getBody();
-		return new ResponseEntity<>(rooms, HttpStatus.OK);
+		return new ResponseEntity<>(rooms, response.getStatusCode());
+	}
+	
+	@GetMapping("/countries/{idCountry}/cities/{idCity}/hotels/{idHotel}/rooms/{idRoom}")
+	public ResponseEntity<Room> getListRoomByHotelRooms(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel, @PathVariable("idRoom") Long idRoom){
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Room> response = restTemplate.exchange(
+		  urlBase+"/countries/"+idCountry+"/cities/"+idCity+"/hotels/"+idHotel+"/rooms/"+idRoom,
+		  HttpMethod.GET,
+		  null,
+		  new ParameterizedTypeReference<Room>(){});
+		Room room = response.getBody();
+		return new ResponseEntity<>(room, response.getStatusCode());
 	}
 
 }
