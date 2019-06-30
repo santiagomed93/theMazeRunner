@@ -1,16 +1,22 @@
 package com.bootcamp.santiagomed93.hotelApi.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="ROOM")
@@ -44,7 +50,9 @@ public class Room {
 	@JsonBackReference
 	private Hotel hotel;
 	
-	
+	@OneToMany(mappedBy = "room",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private Set<Reservation> reservations;
 	
 	
 	public Room() {}
@@ -111,6 +119,14 @@ public class Room {
 
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
+	}
+
+	public Set<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(Set<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 
 }

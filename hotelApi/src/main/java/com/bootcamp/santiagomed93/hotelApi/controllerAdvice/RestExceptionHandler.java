@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -93,6 +94,21 @@ public class RestExceptionHandler{
 		return new ResponseEntity<>(apiError,HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	public final ResponseEntity<Object> handleMissingRequestParameterException(MissingServletRequestParameterException ex){
+		ApiError apiError = new ApiError();
+		apiError.setMessage(ex.getMessage());
+		apiError.setStatus(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(apiError,HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<Object> hadleJsonParse(Exception ex){
+		ApiError apiError = new ApiError();
+		apiError.setMessage(ex.getMessage());
+		apiError.setStatus(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+	}
 	
 
 }

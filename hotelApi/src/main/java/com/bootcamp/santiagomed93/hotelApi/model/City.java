@@ -2,6 +2,7 @@ package com.bootcamp.santiagomed93.hotelApi.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,7 +35,7 @@ public class City {
 	@Column(name="population")
 	private Long population;
 	
-	@OneToMany(mappedBy = "city",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "city",fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private Set<Hotel> hotels;
 	

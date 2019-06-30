@@ -1,5 +1,6 @@
 package com.bootcamp.santiagomed93.hotelApi;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,8 @@ public class HotelApiInitializingBean implements InitializingBean{
 	}
 	
 	private void createDataBase() {
-		
+		LocalDate localDate = LocalDate.now();
+		System.out.println("localDate: " + localDate);
 		////////////////
 		//Set Countries
 		////////////////

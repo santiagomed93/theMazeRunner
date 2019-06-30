@@ -1,5 +1,7 @@
 package com.bootcamp.santiagomed93.hotelApi.service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +10,12 @@ import org.springframework.stereotype.Service;
 import com.bootcamp.santiagomed93.hotelApi.model.City;
 import com.bootcamp.santiagomed93.hotelApi.model.Country;
 import com.bootcamp.santiagomed93.hotelApi.model.Hotel;
+import com.bootcamp.santiagomed93.hotelApi.model.Reservation;
 import com.bootcamp.santiagomed93.hotelApi.model.Room;
 import com.bootcamp.santiagomed93.hotelApi.repository.CityRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.CountryRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.HotelRepository;
+import com.bootcamp.santiagomed93.hotelApi.repository.ReservationRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.RoomRepository;
 
 @Service
@@ -28,6 +32,9 @@ public class DataSourceImpl implements DataSource{
 	
 	@Autowired
 	private RoomRepository repoRoom;
+	
+	@Autowired
+	private ReservationRepository repoReservation;
 	
 	
 	// Methods Country
@@ -64,6 +71,11 @@ public class DataSourceImpl implements DataSource{
 	@Override
 	public List<City> findAllCity() {
 		return repoCity.findAll();
+	}
+	
+	@Override
+	public List<City> findCityByCountry(Country country){
+		return repoCity.findByCountry(country);
 	}
 	
 	@Override
@@ -153,6 +165,11 @@ public class DataSourceImpl implements DataSource{
 		}		
 	}
 	
+	@Override
+	public List<Hotel> findHotelByCity(City city){
+		return repoHotel.findByCity(city);
+	}
+	
 	// Methods Rooms
 	@Override
 	public List<Room> findAllRoom(){
@@ -209,6 +226,34 @@ public class DataSourceImpl implements DataSource{
 		}
 		return null;
 	}
-
+	
+	@Override
+	public List<Room> findRoomByHotel(Hotel hotel){
+		return repoRoom.findByHotel(hotel);
+	}
+	
+	//Methods Reservation
+	@Override
+	public List<Reservation> findReservationByRoom(Room room){
+		return repoReservation.findByRoom(room);
+	}
+	
+	@Override
+	public boolean checkDatesReservation(LocalDate startDate, LocalDate endDate) {
+		List<Reservation> reservations = repoReservation.findByStartDateBetweenOrEndDateBetween(startDate, endDate, startDate, endDate);
+		if(reservations.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void saveReservation(Reservation reservation, Room room) {
+		long numberDays = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+		long days = numberDays + 1;
+		reservation.setTotalCost(room.getCost()*days);
+		reservation.setRoom(room);
+		repoReservation.saveAndFlush(reservation);
+	}
 	
 }
