@@ -10,10 +10,6 @@ public class Room {
 	private Integer capacity;
 	private Integer cost;
 	
-	
-	
-	
-	
 	public Room() {}
 	
 	public Room(Long id, String numberRoom, Integer singleBed, Integer doubleBed, Integer cost) {

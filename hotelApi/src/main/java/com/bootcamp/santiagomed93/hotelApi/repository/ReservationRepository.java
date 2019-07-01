@@ -13,5 +13,6 @@ import com.bootcamp.santiagomed93.hotelApi.model.Room;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
 	List<Reservation> findByRoom(Room room);
-	List<Reservation> findByStartDateBetweenOrEndDateBetween(LocalDate startDate1, LocalDate endDate1, LocalDate startDate2, LocalDate endDate2);
+	List<Reservation> findByStartDateBetween(LocalDate startDate, LocalDate endDate);
+	List<Reservation> findByEndDateBetween(LocalDate startDate, LocalDate endDate);
 }

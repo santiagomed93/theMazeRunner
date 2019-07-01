@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.bootcamp.santiagomed93.hotelApi.model.City;
@@ -20,7 +21,8 @@ import com.bootcamp.santiagomed93.hotelApi.repository.HotelRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.RoomRepository;
 
 @Service
-public class HotelApiInitializingBean implements InitializingBean{
+@Profile("prod")
+public class HotelApiInitializingBeanProd implements InitializingBean{
 
 	@Autowired
 	CityRepository cityRepo;

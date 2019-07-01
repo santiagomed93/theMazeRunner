@@ -139,7 +139,7 @@ public class MixController {
 	}
 	
 	@PostMapping("/countries/{idCountry}/cities/{idCity}/hotels/{idHotel}/rooms/{idRoom}/reservations")
-	public ResponseEntity<Object> createReservationByRoomIdAndHotelId(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel, @PathVariable("idRoom") Long idRoom, @RequestBody Reservation reservation){
+	public ResponseEntity<Reservation> createReservationByRoomIdAndHotelId(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel, @PathVariable("idRoom") Long idRoom, @RequestBody Reservation reservation){
 		ResponseEntity<Room> responseRoom = getRoomByRoomIdAndHotelId(idCountry,idCity,idHotel, idRoom);
 		Room room = responseRoom.getBody();
 		if(room != null) {
@@ -148,7 +148,7 @@ public class MixController {
 					datasource.saveReservation(reservation, room);
 					return new ResponseEntity<>(reservation, HttpStatus.OK);
 				}
-				return new ResponseEntity<>("Habitacion Reservada en esa fecha",HttpStatus.OK);
+				return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
 			}
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}

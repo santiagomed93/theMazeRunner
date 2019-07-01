@@ -240,8 +240,9 @@ public class DataSourceImpl implements DataSource{
 	
 	@Override
 	public boolean checkDatesReservation(LocalDate startDate, LocalDate endDate) {
-		List<Reservation> reservations = repoReservation.findByStartDateBetweenOrEndDateBetween(startDate, endDate, startDate, endDate);
-		if(reservations.isEmpty()) {
+		List<Reservation> reservationsStartDate = repoReservation.findByStartDateBetween(startDate, endDate);
+		List<Reservation> reservationsEndDate = repoReservation.findByEndDateBetween(startDate, endDate);
+		if(reservationsStartDate.isEmpty() && reservationsEndDate.isEmpty()) {
 			return true;
 		}
 		return false;

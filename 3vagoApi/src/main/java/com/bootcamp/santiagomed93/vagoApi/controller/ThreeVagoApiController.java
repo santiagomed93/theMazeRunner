@@ -3,16 +3,20 @@ package com.bootcamp.santiagomed93.vagoApi.controller;
 import java.util.List;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.bootcamp.santiagomed93.vagoApi.model.City;
 import com.bootcamp.santiagomed93.vagoApi.model.Country;
 import com.bootcamp.santiagomed93.vagoApi.model.Hotel;
+import com.bootcamp.santiagomed93.vagoApi.model.Reservation;
 import com.bootcamp.santiagomed93.vagoApi.model.Room;
 
 @RestController
@@ -28,7 +32,6 @@ public class ThreeVagoApiController {
 		  HttpMethod.GET,
 		  null,
 		  new ParameterizedTypeReference<List<Country>>(){});
-		System.out.println(response.getBody());
 		List<Country> countries = response.getBody();
 		return new ResponseEntity<>(countries, response.getStatusCode());
 	}
@@ -70,7 +73,7 @@ public class ThreeVagoApiController {
 	}
 	
 	@GetMapping("/countries/{idCountry}/cities/{idCity}/hotels/{idHotel}/rooms/{idRoom}")
-	public ResponseEntity<Room> getListRoomByHotelRooms(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel, @PathVariable("idRoom") Long idRoom){
+	public ResponseEntity<Room> getRoomByHotelRooms(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel, @PathVariable("idRoom") Long idRoom){
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<Room> response = restTemplate.exchange(
 		  urlBase+"/countries/"+idCountry+"/cities/"+idCity+"/hotels/"+idHotel+"/rooms/"+idRoom,
@@ -79,6 +82,31 @@ public class ThreeVagoApiController {
 		  new ParameterizedTypeReference<Room>(){});
 		Room room = response.getBody();
 		return new ResponseEntity<>(room, response.getStatusCode());
+	}
+	
+	@GetMapping("/countries/{idCountry}/cities/{idCity}/hotels/{idHotel}/rooms/{idRoom}/reservations")
+	public ResponseEntity<List<Reservation>> getListReservationsByHotelRooms(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel, @PathVariable("idRoom") Long idRoom){
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<List<Reservation>> response = restTemplate.exchange(
+		  urlBase+"/countries/"+idCountry+"/cities/"+idCity+"/hotels/"+idHotel+"/rooms/"+idRoom+"/reservations",
+		  HttpMethod.GET,
+		  null,
+		  new ParameterizedTypeReference<List<Reservation>>(){});
+		List<Reservation> reservations = response.getBody();
+		return new ResponseEntity<>(reservations, response.getStatusCode());
+	}
+	
+	@PostMapping("/countries/{idCountry}/cities/{idCity}/hotels/{idHotel}/rooms/{idRoom}/reservations")
+	public ResponseEntity<Reservation> createReservationByHotelRooms(@PathVariable("idCountry") Long idCountry, @PathVariable("idCity") Long idCity, @PathVariable("idHotel") Long idHotel, @PathVariable("idRoom") Long idRoom, @RequestBody Reservation reservation){
+		RestTemplate restTemplate = new RestTemplate();
+		HttpEntity<Reservation> request = new HttpEntity<>(reservation);
+		ResponseEntity<Reservation> response = restTemplate.exchange(
+		  urlBase+"/countries/"+idCountry+"/cities/"+idCity+"/hotels/"+idHotel+"/rooms/"+idRoom+"/reservations",
+		  HttpMethod.POST,
+		  request,
+		  new ParameterizedTypeReference<Reservation>(){});
+		Reservation reservationData = response.getBody();
+		return new ResponseEntity<>(reservationData, response.getStatusCode());
 	}
 
 }

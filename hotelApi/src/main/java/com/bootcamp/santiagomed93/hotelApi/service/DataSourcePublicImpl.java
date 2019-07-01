@@ -1,5 +1,7 @@
 package com.bootcamp.santiagomed93.hotelApi.service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +11,12 @@ import org.springframework.stereotype.Service;
 import com.bootcamp.santiagomed93.hotelApi.model.City;
 import com.bootcamp.santiagomed93.hotelApi.model.Country;
 import com.bootcamp.santiagomed93.hotelApi.model.Hotel;
+import com.bootcamp.santiagomed93.hotelApi.model.Reservation;
 import com.bootcamp.santiagomed93.hotelApi.model.Room;
 import com.bootcamp.santiagomed93.hotelApi.repository.CityRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.CountryRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.HotelRepository;
+import com.bootcamp.santiagomed93.hotelApi.repository.ReservationRepository;
 import com.bootcamp.santiagomed93.hotelApi.repository.RoomRepository;
 
 @Service
@@ -29,6 +33,9 @@ public class DataSourcePublicImpl implements DataSourcePublic{
 	
 	@Autowired
 	private RoomRepository repoRoom;
+	
+	@Autowired
+	private ReservationRepository repoReservation;
 	
 	@Override
 	public List<Country> publicAllCountry(){
@@ -129,6 +136,35 @@ public class DataSourcePublicImpl implements DataSourcePublic{
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public List<Reservation> publicReservationByRoom(Long idCountry, Long idCity, Long idHotel, Long idRoom) {
+		Room room = publicRoomByHotel(idCountry, idCity, idHotel, idRoom);
+		if(room != null) {
+			List<Reservation> reservations = repoReservation.findByRoom(room);
+			return reservations;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean checkDatesReservation(LocalDate startDate, LocalDate endDate) {
+		List<Reservation> reservationsStartDate = repoReservation.findByStartDateBetween(startDate, endDate);
+		List<Reservation> reservationsEndDate = repoReservation.findByEndDateBetween(startDate, endDate);
+		if(reservationsStartDate.isEmpty() && reservationsEndDate.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void saveReservation(Reservation reservation, Room room) {
+		long numberDays = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+		long days = numberDays + 1;
+		reservation.setTotalCost(room.getCost()*days);
+		reservation.setRoom(room);
+		repoReservation.saveAndFlush(reservation);
 	}
 	
 }

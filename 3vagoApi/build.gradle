@@ -13,7 +13,7 @@ configurations {
 	developmentOnly
 	runtimeClasspath {
 		extendsFrom developmentOnly
-	}
+	}	
 }
 
 repositories {
@@ -22,8 +22,8 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.data:spring-data-rest-hal-browser'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.1.5.RELEASE'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
