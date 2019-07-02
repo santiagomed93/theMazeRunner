@@ -29,8 +29,8 @@ public class PublicController {
 		return datasource.publicAllCountry();
 	}
 	
-	@GetMapping("/public/countries/{id}/cities")
-	public ResponseEntity<List<City>> getCitiesByCountry(@PathVariable("id") Long idCountry){
+	@GetMapping("/public/countries/{idCountry}/cities")
+	public ResponseEntity<List<City>> getCitiesByCountry(@PathVariable("idCountry") Long idCountry){
 		List<City> cities = datasource.publicAllCity(idCountry);
 		if(cities != null) {
 			return new ResponseEntity<>(cities,HttpStatus.OK);

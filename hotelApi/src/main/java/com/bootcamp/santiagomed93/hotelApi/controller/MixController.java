@@ -24,8 +24,8 @@ public class MixController {
 	@Autowired
 	private DataSource datasource;
 
-	@GetMapping("/countries/{id}/cities")
-	public ResponseEntity<List<City>> getCitiesByCountryId(@PathVariable("id") Long idCountry){
+	@GetMapping("/countries/{idCountry}/cities")
+	public ResponseEntity<List<City>> getCitiesByCountryId(@PathVariable("idCountry") Long idCountry){
 		Country country = datasource.findCountryById(idCountry);
 		if(country != null) {
 			List<City> cities =datasource.findCityByCountry(country);
@@ -38,8 +38,8 @@ public class MixController {
 		return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 	}
 	
-	@PostMapping("/countries/{id}/cities")
-	public ResponseEntity<List<City>> updateCitiesInACountry(@PathVariable("id") Long idCountry, @RequestBody List<City> cities) {
+	@PostMapping("/countries/{idCountry}/cities")
+	public ResponseEntity<List<City>> updateCitiesInACountry(@PathVariable("idCountry") Long idCountry, @RequestBody List<City> cities) {
 		Country country = datasource.findCountryById(idCountry);
 		if(country != null) {
 			for(City city : cities) {
